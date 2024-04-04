@@ -14,7 +14,8 @@ interface AssignmentProps {
   deleteAssignment: (index: number, assignmentIndex: number) => void;
 }
 
-const isFloat = (value: string) => !isNaN(parseFloat(value));
+const isFloat = (value: string) =>
+  !isNaN(parseFloat(value)) || (/^\d*\.\d*$/.test(value) && value !== ".");
 
 export const Assignment = ({
   assignment,
