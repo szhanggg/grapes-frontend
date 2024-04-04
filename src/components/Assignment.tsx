@@ -14,8 +14,10 @@ interface AssignmentProps {
   deleteAssignment: (index: number, assignmentIndex: number) => void;
 }
 
-const isFloat = (value: string) =>
-  !isNaN(parseFloat(value)) || (/^\d*\.\d*$/.test(value) && value !== ".");
+const isNumber = (value: string) => {
+  // Match regex for numbers including decimals
+  return /^\d*\.?\d*$/.test(value);
+};
 
 export const Assignment = ({
   assignment,
