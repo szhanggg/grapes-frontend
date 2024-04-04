@@ -15,8 +15,7 @@ interface AssignmentProps {
 }
 
 const isNumber = (value: string) => {
-  // Match regex for numbers including decimals
-  return /^\d*\.?\d*$/.test(value);
+  return !isNaN(parseFloat(value));
 };
 
 export const Assignment = ({
@@ -48,17 +47,11 @@ export const Assignment = ({
   }, [isEditing]);
 
   useEffect(() => {
-    if (!isNumber(earned)) {
-      setEarned("");
-    }
-    if (!isNumber(total)) {
-      setTotal("");
-    }
     editAssignment(classIndex, assignmentIndex, {
       title: assignment.title,
       assignmentType: type,
-      points: earned,
-      pointsPossible: total,
+      points: isNumber(earned) ? parseFloat(earned) : "",
+      pointsPossible: isNumber(total) ? parseFloat(total) : "",
       date: assignment.date,
     });
   }, [type, earned, total]);
@@ -89,7 +82,7 @@ export const Assignment = ({
         {isEditing.earned ? (
           <input
             value={earned}
-            onChange={(e) => setEarned(parseFloat(e.target.value))}
+            onChange={(e) => setEarned(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, earned: false }))}
             ref={earnedRef}
           />
@@ -104,7 +97,7 @@ export const Assignment = ({
         {isEditing.total ? (
           <input
             value={total}
-            onChange={(e) => setTotal(parseFloat(e.target.value))}
+            onChange={(e) => setTotal(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, total: false }))}
             ref={totalRef}
           />
