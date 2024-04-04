@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "./components/Footer";
 import ClassCard from "./components/ClassCard";
 import { Button } from "./components/ui/button";
+import { NavBar } from "./components/NavBar";
 
 function Dashboard() {
   const { name, loggedIn, totalGrades, setClassData, originalClassData } =
@@ -24,6 +25,7 @@ function Dashboard() {
 
   return (
     <div className="p-4">
+      <NavBar />
       <Card>
         <CardHeader>
           <CardTitle>{name}</CardTitle>

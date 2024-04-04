@@ -12,6 +12,7 @@ import {
 } from "./components/ui/table";
 import Assignment from "./components/Assignment";
 import { Button } from "./components/ui/button";
+import { NavBar } from "./components/NavBar";
 
 export const Class = () => {
   const { index } = useParams();
@@ -41,6 +42,7 @@ export const Class = () => {
 
   return (
     <div className="p-4">
+      <NavBar />
       <Card>
         <CardHeader>
           <CardTitle>
