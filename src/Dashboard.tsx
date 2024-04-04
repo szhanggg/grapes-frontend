@@ -36,7 +36,7 @@ function Dashboard() {
           >
             Reset
           </Button>
-          <div className="flex flex-col gap-4">
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
             {totalGrades.map((classData: ClassData, i) => (
               <ClassCard
                 key={i}

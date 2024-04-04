@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { letterGrade } from "@/lib/utils";
 
 type ClassCardProps = {
   name: string;
@@ -11,13 +12,16 @@ type ClassCardProps = {
 export const ClassCard = ({ name, grade, index, color }: ClassCardProps) => {
   return (
     <Link to={`/class/${index}`}>
-      <Card>
+      <Card className="flex flex-col items-center justify-between h-full">
         <CardHeader>
-          <CardTitle>
-            {name} <span className={color}>{grade}%</span>
-          </CardTitle>
+          <CardTitle>{name}</CardTitle>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent className="flex flex-col items-center my-4">
+          <h1 className={color + " font-bold text-4xl md:text-6xl"}>
+            {letterGrade(grade)}
+          </h1>
+          <h1 className={color + " text-2xl"}>{grade}%</h1>
+        </CardContent>
       </Card>
     </Link>
   );
