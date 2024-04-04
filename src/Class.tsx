@@ -13,6 +13,8 @@ import {
 import Assignment from "./components/Assignment";
 import { Button } from "./components/ui/button";
 import { NavBar } from "./components/NavBar";
+import { CardWrapper } from "./components/CardWrapper";
+import { colorGrade, letterGrade } from "./lib/utils";
 
 export const Class = () => {
   const { index } = useParams();
@@ -25,6 +27,8 @@ export const Class = () => {
     deleteAssignment,
     counter,
     setCounter,
+    setClassData,
+    originalClassData,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -43,68 +47,126 @@ export const Class = () => {
   return (
     <div className="p-4">
       <NavBar />
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <h1>{curClassGrades?.name}</h1>
-            <h1 className={curClassGrades?.color + " mt-4"}>
-              {curClassGrades?.grade}%
-            </h1>
-            <h1>
-              AT : {curClassGrades?.ATEarned}/{curClassGrades?.ATTotal} ={" "}
-              {curClassGrades?.ATGrade}%
-            </h1>
-            <h1>
-              PP : {curClassGrades?.PPEarned}/{curClassGrades?.PPTotal} ={" "}
-              {curClassGrades?.PPGrade}%
-            </h1>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => {
-              addAssignment(parseInt(index ? index : "0"), {
-                title: `New Assignment ${counter}`,
-                date: "N/A -",
-                assignmentType: "All Tasks / Assessments",
-                points: 0,
-                pointsPossible: 0,
-              });
-              setCounter((counter: number) => counter + 1);
-            }}
-          >
-            Add Assignment
-          </Button>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="mx-0"></TableHead>
-                <TableHead className="w-32 hidden md:table-cell">
-                  Date
-                </TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {curClassData?.assignments.map((assignment: any, i: number) => (
-                <Assignment
-                  key={
-                    assignment.title + assignment.date + curClassGrades?.name
+      {curClassGrades && (
+        <Card className="w-min md:w-full">
+          <CardHeader>
+            <CardTitle>
+              <h1>{curClassGrades?.name}</h1>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center gap-4 w-min md:w-full">
+            <CardWrapper>
+              <div className="flex justify-between w-full gap-12 items-center">
+                <div
+                  className={
+                    "flex flex-col items-center " +
+                    colorGrade(curClassGrades.ATGrade)
                   }
-                  assignmentIndex={i}
-                  classIndex={parseInt(index ? index : "0")}
-                  assignment={assignment}
-                  editAssignment={editAssignment}
-                  deleteAssignment={deleteAssignment}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-        <Footer />
-      </Card>
+                >
+                  <p className="text-gray-400">AT</p>
+                  <h1 className="font-bold text-4xl">
+                    {letterGrade(curClassGrades.ATGrade)}
+                  </h1>
+                  <h2 className="text-sm font-semibold">
+                    {curClassGrades.ATGrade}
+                  </h2>
+                  <h2 className="text-sm">
+                    {curClassGrades.ATEarned}/{curClassGrades.ATTotal}
+                  </h2>
+                </div>
+                <div
+                  className={
+                    "flex flex-col items-center " +
+                    colorGrade(curClassGrades.grade)
+                  }
+                >
+                  <p className="text-gray-400">Total</p>
+                  <h1 className="font-bold text-7xl">
+                    {letterGrade(curClassGrades.grade)}
+                  </h1>
+                  <h2 className="text-xl font-semibold">
+                    {curClassGrades.grade}
+                  </h2>
+                </div>
+                <div
+                  className={
+                    "flex flex-col items-center " +
+                    colorGrade(curClassGrades.PPGrade)
+                  }
+                >
+                  <p className="text-gray-400">PP</p>
+                  <h1 className="font-bold text-4xl">
+                    {letterGrade(curClassGrades.PPGrade)}
+                  </h1>
+                  <h2 className="text-sm font-semibold">
+                    {curClassGrades.PPGrade}
+                  </h2>
+                  <h2 className="text-sm">
+                    {curClassGrades.PPEarned}/{curClassGrades.PPTotal}
+                  </h2>
+                </div>
+              </div>
+            </CardWrapper>
+            <CardWrapper>
+              <div className="flex justify-between w-full">
+                <Button
+                  onClick={() => {
+                    setClassData(originalClassData);
+                  }}
+                >
+                  Reset
+                </Button>
+                <Button
+                  onClick={() => {
+                    addAssignment(parseInt(index ? index : "0"), {
+                      title: `New Assignment ${counter}`,
+                      date: "N/A -",
+                      assignmentType: "All Tasks / Assessments",
+                      points: 0,
+                      pointsPossible: 0,
+                    });
+                    setCounter((counter: number) => counter + 1);
+                  }}
+                >
+                  +
+                </Button>
+              </div>
+              <Table className="w-auto">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="mx-0"></TableHead>
+                    <TableHead className="w-32 hidden md:table-cell">
+                      Date
+                    </TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Points</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {curClassData?.assignments.map(
+                    (assignment: any, i: number) => (
+                      <Assignment
+                        key={
+                          assignment.title +
+                          assignment.date +
+                          curClassGrades?.name
+                        }
+                        assignmentIndex={i}
+                        classIndex={parseInt(index ? index : "0")}
+                        assignment={assignment}
+                        editAssignment={editAssignment}
+                        deleteAssignment={deleteAssignment}
+                      />
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </CardWrapper>
+          </CardContent>
+          <Footer />
+        </Card>
+      )}
     </div>
   );
 };
