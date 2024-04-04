@@ -20,7 +20,7 @@ const backendURL = "https://srzhang.pythonanywhere.com/";
 // const backendURL = "http://localhost:5001";
 
 const formSchema = z.object({
-  username: z.string().min(6).max(7),
+  username: z.string(),
   password: z.string(),
 });
 
