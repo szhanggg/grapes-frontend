@@ -12,7 +12,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-const backendURL = "https://grapes-rh27uurzq-szhangggs-projects.vercel.app/";
+const backendURL = "https://srzhang.pythonanywhere.com/";
 
 const formSchema = z.object({
   username: z.string().min(6).max(7),
@@ -32,16 +32,15 @@ export function LoginForm() {
     // Send a POST request to /login
 
     let r = await fetch(`${backendURL}/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(values),
     });
 
     let data = await r.json();
     console.log(data);
-
   }
 
   return (
