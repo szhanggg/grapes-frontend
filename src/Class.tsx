@@ -22,9 +22,9 @@ export const Class = () => {
     addAssignment,
     editAssignment,
     deleteAssignment,
+    counter,
+    setCounter,
   } = useContext(DataContext);
-
-  const [counter, setCounter] = useState(1);
 
   const navigate = useNavigate();
 
@@ -33,8 +33,6 @@ export const Class = () => {
 
   const curClassData =
     index !== undefined ? classData[parseInt(index)] : undefined;
-
-  console.log(curClassData);
 
   useEffect(() => {
     if (!index) navigate("/");

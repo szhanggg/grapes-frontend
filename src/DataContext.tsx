@@ -17,6 +17,8 @@ interface DataContextType {
     assignment: any
   ) => void;
   deleteAssignment: (index: number, assignmentIndex: number) => void;
+  counter: number;
+  setCounter: (counter: number) => void;
 }
 
 interface DataProviderProps {
@@ -36,6 +38,8 @@ const DataContext = createContext<DataContextType>({
   addAssignment: () => {},
   editAssignment: () => {},
   deleteAssignment: () => {},
+  counter: 1,
+  setCounter: () => {},
 });
 
 export interface ClassData {
@@ -69,6 +73,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [classData, setClassData] = useState([] as any);
   const [originalClassData, setOriginalClassData] = useState([] as any);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   const totalGrades = useMemo(() => {
     if (!loggedIn) return [];
@@ -174,6 +179,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         addAssignment,
         editAssignment,
         deleteAssignment,
+        counter,
+        setCounter,
       }}
     >
       {children}
