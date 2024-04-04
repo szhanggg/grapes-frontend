@@ -15,7 +15,8 @@ const LoginWrapper = () => {
         <CardTitle>Grapes</CardTitle>
         <CardDescription>
           <h2>Grade Viewer</h2>
-          <h2>Currently Under Development</h2>
+          <h2>Currently Under Heavy Heavy Development</h2>
+          <h2>Please Report Bugs to srzhang on Discord</h2>
         </CardDescription>
       </CardHeader>
       <CardContent>
