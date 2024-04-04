@@ -1,4 +1,11 @@
-import { createContext, useState, ReactNode, useMemo } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useMemo,
+  SetStateAction,
+  Dispatch,
+} from "react";
 
 interface DataContextType {
   name: string;
@@ -18,7 +25,7 @@ interface DataContextType {
   ) => void;
   deleteAssignment: (index: number, assignmentIndex: number) => void;
   counter: number;
-  setCounter: (counter: number) => void;
+  setCounter: Dispatch<SetStateAction<number>>;
 }
 
 interface DataProviderProps {

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "./DataContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import Footer from "./components/Footer";
 import {
@@ -68,7 +68,7 @@ export const Class = () => {
                 points: 0,
                 pointsPossible: 0,
               });
-              setCounter((counter) => counter + 1);
+              setCounter((counter: number) => counter + 1);
             }}
           >
             Add Assignment
