@@ -10,9 +10,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import Footer from "./components/Footer";
 import ClassCard from "./components/ClassCard";
+import { Button } from "./components/ui/button";
 
 function Dashboard() {
-  const { name, loggedIn, totalGrades } = useContext(DataContext);
+  const { name, loggedIn, totalGrades, setClassData, originalClassData } =
+    useContext(DataContext);
 
   const navigate = useNavigate();
 
@@ -28,6 +30,12 @@ function Dashboard() {
           <CardDescription>Grades</CardDescription>
         </CardHeader>
         <CardContent>
+          <Button
+            className="mb-4"
+            onClick={() => setClassData(originalClassData)}
+          >
+            Reset
+          </Button>
           <div className="flex flex-col gap-4">
             {totalGrades.map((classData: ClassData, i) => (
               <ClassCard
