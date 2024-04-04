@@ -85,6 +85,7 @@ export const Assignment = ({
             onChange={(e) => setEarned(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, earned: false }))}
             ref={earnedRef}
+            size={earned.length || 1}
           />
         ) : (
           <span
@@ -100,6 +101,7 @@ export const Assignment = ({
             onChange={(e) => setTotal(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, total: false }))}
             ref={totalRef}
+            size={total.length || 1}
           />
         ) : (
           <span
