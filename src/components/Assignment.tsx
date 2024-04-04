@@ -68,7 +68,7 @@ export const Assignment = ({
           X
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell className="hidden md:block">
         {assignment.date.slice(0, assignment.date.indexOf("-") - 1)}
       </TableCell>
       <TableCell>{assignment.title}</TableCell>

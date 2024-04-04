@@ -76,8 +76,8 @@ export const Class = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead></TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead className="mx-0"></TableHead>
+                <TableHead className="w-32 hidden md:block">Date</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Points</TableHead>
