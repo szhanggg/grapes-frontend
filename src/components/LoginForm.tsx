@@ -26,7 +26,8 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setName, setClassData, setLoggedIn } = useContext(DataContext);
+  const { setName, setClassData, setLoggedIn, setOriginalClassData } =
+    useContext(DataContext);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ export function LoginForm() {
       console.log(data);
       setName(data.name);
       setClassData(data.classData);
+      setOriginalClassData(data.classData);
       setLoggedIn(true);
       navigate("/dashboard");
     } catch (e) {
@@ -106,6 +108,7 @@ export function LoginForm() {
             <Icons.spinner className="animate-spin ml-2"></Icons.spinner>
           )}
         </Button>
+        <FormMessage>{loginError}</FormMessage>
       </form>
     </Form>
   );

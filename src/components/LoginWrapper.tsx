@@ -13,7 +13,10 @@ const LoginWrapper = () => {
     <Card>
       <CardHeader>
         <CardTitle>Grapes</CardTitle>
-        <CardDescription>Grade Viewer</CardDescription>
+        <CardDescription>
+          <h2>Grade Viewer</h2>
+          <h2>Currently Under Development</h2>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm />

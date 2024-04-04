@@ -28,14 +28,17 @@ function Dashboard() {
           <CardDescription>Grades</CardDescription>
         </CardHeader>
         <CardContent>
-          {totalGrades.map((classData: ClassData, i) => (
-            <ClassCard
-              key={i}
-              name={classData.name}
-              grade={classData.grade}
-              index={i}
-            />
-          ))}
+          <div className="flex flex-col gap-4">
+            {totalGrades.map((classData: ClassData, i) => (
+              <ClassCard
+                key={i}
+                name={classData.name}
+                grade={classData.grade}
+                color={classData.color}
+                index={i}
+              />
+            ))}
+          </div>
         </CardContent>
         <Footer />
       </Card>
