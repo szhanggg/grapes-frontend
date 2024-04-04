@@ -35,7 +35,7 @@ export const Class = () => {
   console.log(curClassData);
 
   useEffect(() => {
-    if (!index) navigate("/dashboard");
+    if (!index) navigate("/");
     if (!loggedIn) navigate("/");
   }, []);
 
