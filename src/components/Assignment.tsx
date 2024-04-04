@@ -1,7 +1,15 @@
 import { colorGrade } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { TableCell, TableRow } from "./ui/table";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Input } from "./ui/input";
 
 interface AssignmentProps {
   assignment: any;
@@ -30,23 +38,6 @@ export const Assignment = ({
   const [earned, setEarned] = useState<string>(assignment.points);
   const [total, setTotal] = useState<string>(assignment.pointsPossible);
 
-  // Inside your component
-  const [isEditing, setIsEditing] = useState({
-    earned: false,
-    total: false,
-  });
-
-  const earnedRef = useRef<HTMLInputElement>(null);
-  const totalRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isEditing.earned) {
-      earnedRef.current?.focus();
-    } else if (isEditing.total) {
-      totalRef.current?.focus();
-    }
-  }, [isEditing]);
-
   useEffect(() => {
     editAssignment(classIndex, assignmentIndex, {
       title: assignment.title,
@@ -74,50 +65,36 @@ export const Assignment = ({
       </TableCell>
       <TableCell>{assignment.title}</TableCell>
       <TableCell>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="All Tasks / Assessments">AT</option>
-          <option value="Practice / Preparation">PP</option>
-        </select>
+        <Select value={type} onValueChange={(value) => setType(value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Test" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All Tasks / Assessments">AT</SelectItem>
+            <SelectItem value="Practice / Preparation">PP</SelectItem>
+          </SelectContent>
+        </Select>
       </TableCell>
       <TableCell
-        className={
+        className={`${
           isNumber(earned) && isNumber(total)
             ? colorGrade((parseFloat(earned) / parseFloat(total)) * 100)
             : "text-red-500"
-        }
+        } whitespace-nowrap`}
       >
-        <p></p>
-        {isEditing.earned ? (
-          <input
-            value={earned}
-            onChange={(e) => setEarned(e.target.value)}
-            onBlur={() => setIsEditing((prev) => ({ ...prev, earned: false }))}
-            ref={earnedRef}
-            size={earned.length + 1 || 1}
-          />
-        ) : (
-          <span
-            onClick={() => setIsEditing((prev) => ({ ...prev, earned: true }))}
-          >
-            {earned === "" ? "?" : earned}
-          </span>
-        )}
-        /
-        {isEditing.total ? (
-          <input
-            value={total}
-            onChange={(e) => setTotal(e.target.value)}
-            onBlur={() => setIsEditing((prev) => ({ ...prev, total: false }))}
-            ref={totalRef}
-            size={total.length + 1 || 1}
-          />
-        ) : (
-          <span
-            onClick={() => setIsEditing((prev) => ({ ...prev, total: true }))}
-          >
-            {total === "" ? "?" : total}
-          </span>
-        )}
+        <Input
+          value={earned}
+          onChange={(e) => setEarned(e.target.value)}
+          size={earned.length + 1 || 1}
+          className="p-0 w-12 pl-2 inline-block"
+        />
+        <span className="mx-1 inline-block">/</span>
+        <Input
+          value={total}
+          onChange={(e) => setTotal(e.target.value)}
+          size={total.length + 1 || 1}
+          className="p-0 w-12 pl-2 inline-block"
+        />
       </TableCell>
     </TableRow>
   );

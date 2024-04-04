@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./globals.css";
 import Dashboard from "./Dashboard.tsx";
 import Class from "./Class.tsx";
+import { ThemeProvider } from "./components/ThemeProvider.tsx";
 
 const BrowserRouter = createBrowserRouter([
   {
@@ -22,7 +23,9 @@ const BrowserRouter = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <DataProvider>
-    <RouterProvider router={BrowserRouter} />
-  </DataProvider>
+  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <DataProvider>
+      <RouterProvider router={BrowserRouter} />
+    </DataProvider>
+  </ThemeProvider>
 );
