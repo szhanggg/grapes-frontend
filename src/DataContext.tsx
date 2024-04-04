@@ -6,6 +6,7 @@ import {
   SetStateAction,
   Dispatch,
 } from "react";
+import { colorGrade } from "./lib/utils";
 
 interface DataContextType {
   name: string;
@@ -60,20 +61,6 @@ export interface ClassData {
   grade: number;
   color: string;
 }
-
-const colorGrade = (grade: number) => {
-  if (grade >= 89.5) {
-    return "text-green-500";
-  } else if (grade >= 79.5) {
-    return "text-blue-500";
-  } else if (grade >= 69.5) {
-    return "text-yellow-500";
-  } else if (grade >= 59.5) {
-    return "text-orange-500";
-  } else {
-    return "text-red-500";
-  }
-};
 
 export const DataProvider = ({ children }: DataProviderProps) => {
   const [name, setName] = useState("Bob the Builder");

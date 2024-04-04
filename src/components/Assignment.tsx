@@ -1,3 +1,4 @@
+import { colorGrade } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { TableCell, TableRow } from "./ui/table";
 import { useState, useRef, useEffect } from "react";
@@ -25,9 +26,9 @@ export const Assignment = ({
   editAssignment,
   deleteAssignment,
 }: AssignmentProps) => {
-  const [type, setType] = useState(assignment.assignmentType);
-  const [earned, setEarned] = useState(assignment.points);
-  const [total, setTotal] = useState(assignment.pointsPossible);
+  const [type, setType] = useState<string>(assignment.assignmentType);
+  const [earned, setEarned] = useState<string>(assignment.points);
+  const [total, setTotal] = useState<string>(assignment.pointsPossible);
 
   // Inside your component
   const [isEditing, setIsEditing] = useState({
@@ -78,14 +79,21 @@ export const Assignment = ({
           <option value="Practice / Preparation">PP</option>
         </select>
       </TableCell>
-      <TableCell>
+      <TableCell
+        className={
+          isNumber(earned) && isNumber(total)
+            ? colorGrade((parseFloat(earned) / parseFloat(total)) * 100)
+            : "text-red-500"
+        }
+      >
+        <p></p>
         {isEditing.earned ? (
           <input
             value={earned}
             onChange={(e) => setEarned(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, earned: false }))}
             ref={earnedRef}
-            size={earned.length || 1}
+            size={earned.length + 1 || 1}
           />
         ) : (
           <span
@@ -101,7 +109,7 @@ export const Assignment = ({
             onChange={(e) => setTotal(e.target.value)}
             onBlur={() => setIsEditing((prev) => ({ ...prev, total: false }))}
             ref={totalRef}
-            size={total.length || 1}
+            size={total.length + 1 || 1}
           />
         ) : (
           <span
