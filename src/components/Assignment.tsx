@@ -21,14 +21,12 @@ export const Assignment = ({
   editAssignment,
   deleteAssignment,
 }: AssignmentProps) => {
-  const [title, setTitle] = useState(assignment.title);
   const [type, setType] = useState(assignment.assignmentType);
   const [earned, setEarned] = useState(assignment.points);
   const [total, setTotal] = useState(assignment.pointsPossible);
 
   // Inside your component
   const [isEditing, setIsEditing] = useState({
-    title: false,
     earned: false,
     total: false,
   });
@@ -52,13 +50,13 @@ export const Assignment = ({
       setTotal("");
     }
     editAssignment(classIndex, assignmentIndex, {
-      title,
+      title: assignment.title,
       assignmentType: type,
       points: earned,
       pointsPossible: total,
       date: assignment.date,
     });
-  }, [title, type, earned, total]);
+  }, [type, earned, total]);
 
   return (
     <TableRow>
@@ -75,7 +73,7 @@ export const Assignment = ({
       <TableCell>
         {assignment.date.slice(0, assignment.date.indexOf("-") - 1)}
       </TableCell>
-      <TableCell>{title}</TableCell>
+      <TableCell>{assignment.title}</TableCell>
       <TableCell>
         <select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="All Tasks / Assessments">AT</option>
