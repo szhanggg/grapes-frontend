@@ -14,6 +14,8 @@ interface AssignmentProps {
   deleteAssignment: (index: number, assignmentIndex: number) => void;
 }
 
+const isFloat = (value: string) => !isNaN(parseFloat(value));
+
 export const Assignment = ({
   assignment,
   assignmentIndex,
@@ -43,10 +45,10 @@ export const Assignment = ({
   }, [isEditing]);
 
   useEffect(() => {
-    if (isNaN(earned)) {
+    if (!isFloat(earned)) {
       setEarned("");
     }
-    if (isNaN(total)) {
+    if (!isFloat(total)) {
       setTotal("");
     }
     editAssignment(classIndex, assignmentIndex, {
