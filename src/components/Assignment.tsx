@@ -48,10 +48,10 @@ export const Assignment = ({
   }, [isEditing]);
 
   useEffect(() => {
-    if (!isFloat(earned)) {
+    if (!isNumber(earned)) {
       setEarned("");
     }
-    if (!isFloat(total)) {
+    if (!isNumber(total)) {
       setTotal("");
     }
     editAssignment(classIndex, assignmentIndex, {
