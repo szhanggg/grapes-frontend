@@ -11,8 +11,13 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Icons } from "./icons";
+import DataContext from "@/DataContext";
 
 const backendURL = "https://srzhang.pythonanywhere.com/";
+// const backendURL = "http://localhost:5001";
 
 const formSchema = z.object({
   username: z.string().min(6).max(7),
@@ -20,6 +25,12 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setName, setClassData, setLoggedIn } = useContext(DataContext);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,16 +42,33 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Send a POST request to /login
 
-    let r = await fetch(`${backendURL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    if (isLoading) {
+      return;
+    }
 
-    let data = await r.json();
-    console.log(data);
+    setIsLoading(true);
+
+    try {
+      let r = await fetch(`${backendURL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      let data = await r.json();
+      console.log(data);
+      setName(data.name);
+      setClassData(data.classData);
+      setLoggedIn(true);
+      navigate("/dashboard");
+    } catch (e) {
+      console.error(e);
+      setLoginError("An error occurred while logging in.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -72,7 +100,12 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Login</Button>
+        <Button type="submit">
+          Login
+          {isLoading && (
+            <Icons.spinner className="animate-spin ml-2"></Icons.spinner>
+          )}
+        </Button>
       </form>
     </Form>
   );
