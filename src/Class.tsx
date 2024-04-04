@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "./DataContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import Footer from "./components/Footer";
 import {
@@ -23,6 +23,8 @@ export const Class = () => {
     editAssignment,
     deleteAssignment,
   } = useContext(DataContext);
+
+  const [counter, setCounter] = useState(1);
 
   const navigate = useNavigate();
 
@@ -62,12 +64,13 @@ export const Class = () => {
           <Button
             onClick={() => {
               addAssignment(parseInt(index ? index : "0"), {
-                title: "New Assignment",
+                title: `New Assignment ${counter}`,
                 date: "N/A -",
                 assignmentType: "All Tasks / Assessments",
                 points: 0,
                 pointsPossible: 0,
               });
+              setCounter((counter) => counter + 1);
             }}
           >
             Add Assignment
@@ -85,7 +88,9 @@ export const Class = () => {
             <TableBody>
               {curClassData?.assignments.map((assignment: any, i: number) => (
                 <Assignment
-                  key={assignment.title + assignment.date}
+                  key={
+                    assignment.title + assignment.date + curClassGrades?.name
+                  }
                   assignmentIndex={i}
                   classIndex={parseInt(index ? index : "0")}
                   assignment={assignment}
