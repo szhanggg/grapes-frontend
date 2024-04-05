@@ -66,7 +66,9 @@ export function LoginForm() {
       navigate("/dashboard");
     } catch (e) {
       console.error(e);
-      setLoginError("An error occurred while logging in.");
+      setLoginError(
+        "An error occurred while logging in. If you think something is wrong please contact me."
+      );
     } finally {
       setIsLoading(false);
     }
