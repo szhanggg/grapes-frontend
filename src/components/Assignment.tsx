@@ -42,8 +42,8 @@ export const Assignment = ({
     editAssignment(classIndex, assignmentIndex, {
       title: assignment.title,
       assignmentType: type,
-      points: isNumber(earned) ? parseFloat(earned) : "",
-      pointsPossible: isNumber(total) ? parseFloat(total) : "",
+      points: isNumber(earned) ? earned : "",
+      pointsPossible: isNumber(total) ? total : "",
       date: assignment.date,
     });
   }, [type, earned, total]);
