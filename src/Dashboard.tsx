@@ -25,7 +25,7 @@ function Dashboard() {
 
   return (
     <div className="p-4">
-      <NavBar />
+      <NavBar link={true} />
       <Card>
         <CardHeader>
           <CardTitle>{name}</CardTitle>

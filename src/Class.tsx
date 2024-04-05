@@ -46,7 +46,7 @@ export const Class = () => {
 
   return (
     <div className="p-4">
-      <NavBar />
+      <NavBar link={true} />
       {curClassGrades && (
         <Card className="w-min md:w-full">
           <CardHeader>
