@@ -1,8 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "./DataContext";
 import { useContext, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
-import Footer from "./components/Footer";
 import {
   Table,
   TableBody,
