@@ -18,8 +18,9 @@ import DataContext from "@/DataContext";
 import { Checkbox } from "./ui/checkbox";
 import Cookies from "js-cookie";
 
-const backendURL = "https://srzhang.pythonanywhere.com/";
+// const backendURL = "https://srzhang.pythonanywhere.com/";
 // const backendURL = "http://localhost:5001";
+const backendURL = "https://grapes-backend.up.railway.app";
 
 const formSchema = z.object({
   username: z.string(),
