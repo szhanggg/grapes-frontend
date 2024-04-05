@@ -18,11 +18,14 @@ import DataContext from "@/DataContext";
 import { Checkbox } from "./ui/checkbox";
 import Cookies from "js-cookie";
 
-// const backendURL = "https://grapes-backend.up.railway.app";
 const backendURLs = [
   "https://grapes-backend.up.railway.app",
   "https://srzhang.pythonanywhere.com/",
 ];
+const backendURL = backendURLs[Math.floor(Math.random() * backendURLs.length)];
+// const backendURL = "https://grapes-backend.up.railway.app";
+// const backendURL = "https://srzhang.pythonanywhere.com/";
+// const backendURL = "http://localhost:5001";
 
 const formSchema = z.object({
   username: z.string(),
@@ -57,8 +60,6 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      let backendURL =
-        backendURLs[Math.floor(Math.random() * backendURLs.length)];
       let r = await fetch(`${backendURL}/login`, {
         method: "POST",
         headers: {
