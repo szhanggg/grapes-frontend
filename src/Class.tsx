@@ -45,10 +45,10 @@ export const Class = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-2 md:p-4">
       <NavBar link={true} />
       {curClassGrades && (
-        <Card className="w-min md:w-full">
+        <Card>
           <CardHeader>
             <CardTitle>
               <h1>{curClassGrades?.name}</h1>
@@ -56,7 +56,7 @@ export const Class = () => {
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
             <CardWrapper>
-              <div className="flex justify-between w-full gap-12 items-center px-12">
+              <div className="flex justify-between w-full gap-12 items-center px-6 md:px-12">
                 <div
                   className={
                     "flex flex-col items-center " +
@@ -131,10 +131,10 @@ export const Class = () => {
                   +
                 </Button>
               </div>
-              <Table className="w-auto">
+              <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="mx-0"></TableHead>
+                    <TableHead className="mx-0 hidden md:table-cell"></TableHead>
                     <TableHead className="w-32 hidden md:table-cell">
                       Date
                     </TableHead>

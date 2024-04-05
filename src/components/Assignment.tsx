@@ -56,7 +56,7 @@ export const Assignment = ({
 
   return (
     <TableRow>
-      <TableCell>
+      <TableCell className="hidden md:table-cell">
         <Button
           className="w-8 h-8 rounded-md"
           onClick={() => {
