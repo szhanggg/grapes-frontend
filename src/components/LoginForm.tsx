@@ -11,10 +11,12 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "./icons";
 import DataContext from "@/DataContext";
+import { Checkbox } from "./ui/checkbox";
+import Cookies from "js-cookie";
 
 const backendURL = "https://srzhang.pythonanywhere.com/";
 // const backendURL = "http://localhost:5001";
@@ -22,6 +24,7 @@ const backendURL = "https://srzhang.pythonanywhere.com/";
 const formSchema = z.object({
   username: z.string(),
   password: z.string(),
+  remember: z.boolean(),
 });
 
 export function LoginForm() {
@@ -37,6 +40,7 @@ export function LoginForm() {
     defaultValues: {
       username: "",
       password: "",
+      remember: false,
     },
   });
 
@@ -63,6 +67,10 @@ export function LoginForm() {
       setClassData(data.classData);
       setOriginalClassData(data.classData);
       setLoggedIn(true);
+      if (values.remember) {
+        Cookies.set("username", values.username);
+        Cookies.set("password", values.password);
+      }
       navigate("/dashboard");
     } catch (e) {
       console.error(e);
@@ -73,6 +81,15 @@ export function LoginForm() {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    const username = Cookies.get("username");
+    const password = Cookies.get("password");
+
+    if (username && password) {
+      form.handleSubmit(onSubmit)();
+    }
+  }, []);
 
   return (
     <Form {...form}>
@@ -100,6 +117,23 @@ export function LoginForm() {
                 <Input placeholder="ilovegrapes" type="password" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="remember"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Remember Me</FormLabel>
+              </div>
             </FormItem>
           )}
         />
