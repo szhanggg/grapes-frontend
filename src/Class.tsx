@@ -100,7 +100,10 @@ export const Class = () => {
               </div>
             </div>
           </CardWrapper>
-          <CardWrapper>
+          <CardWrapper
+            className="w-full overflow-scroll"
+            cardClassName="w-full overflow-scroll"
+          >
             <div className="flex justify-between w-full">
               <Button
                 onClick={() => {
@@ -124,7 +127,7 @@ export const Class = () => {
                 +
               </Button>
             </div>
-            <Table>
+            <Table className="overflow-scroll">
               <TableHeader>
                 <TableRow>
                   <TableHead className="mx-0 hidden md:table-cell"></TableHead>
