@@ -62,6 +62,12 @@ export function LoginForm() {
         body: JSON.stringify(values),
       });
 
+      if (r.status === 400) {
+        setLoginError("Wrong login details.");
+        setIsLoading(false);
+        return;
+      }
+
       let data = await r.json();
       setName(data.name);
       setClassData(data.classData);
