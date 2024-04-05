@@ -9,6 +9,16 @@
     <meta name="theme-color" content="#000000" />
     <title>Grapes</title>
   </head>
+  <script>
+    if (navigator.userAgent.indexOf("iPhone") > -1) {
+      document
+        .querySelector("[name=viewport]")
+        .setAttribute(
+          "content",
+          "width=device-width, initial-scale=1, maximum-scale=1"
+        );
+    }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script
     async
