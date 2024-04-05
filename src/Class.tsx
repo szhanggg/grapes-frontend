@@ -54,7 +54,7 @@ export const Class = () => {
               <h1>{curClassGrades?.name}</h1>
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center gap-4 w-min md:w-full">
+          <CardContent className="flex flex-col items-center gap-4">
             <CardWrapper>
               <div className="flex justify-between w-full gap-12 items-center">
                 <div
@@ -111,7 +111,7 @@ export const Class = () => {
               <div className="flex justify-between w-full">
                 <Button
                   onClick={() => {
-                    setClassData(originalClassData);
+                    setClassData(JSON.parse(JSON.stringify(originalClassData)));
                   }}
                 >
                   Reset

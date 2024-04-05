@@ -48,6 +48,12 @@ export const Assignment = ({
     });
   }, [type, earned, total]);
 
+  useEffect(() => {
+    setType(assignment.assignmentType);
+    setEarned(assignment.points);
+    setTotal(assignment.pointsPossible);
+  }, [assignment]);
+
   return (
     <TableRow>
       <TableCell>

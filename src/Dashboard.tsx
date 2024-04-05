@@ -34,7 +34,9 @@ function Dashboard() {
         <CardContent>
           <Button
             className="mb-4"
-            onClick={() => setClassData(originalClassData)}
+            onClick={() =>
+              setClassData(JSON.parse(JSON.stringify(originalClassData)))
+            }
           >
             Reset
           </Button>
