@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { useNavigate } from "react-router-dom";
-import Footer from "./components/Footer";
 import ClassCard from "./components/ClassCard";
 import { Button } from "./components/ui/button";
 import { NavBar } from "./components/NavBar";
@@ -52,7 +51,6 @@ function Dashboard() {
             ))}
           </div>
         </CardContent>
-        <Footer />
       </Card>
     </div>
   );
