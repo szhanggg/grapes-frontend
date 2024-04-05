@@ -87,6 +87,9 @@ export function LoginForm() {
     const password = Cookies.get("password");
 
     if (username && password) {
+      form.setValue("username", username);
+      form.setValue("password", password);
+      form.setValue("remember", true);
       form.handleSubmit(onSubmit)();
     }
   }, []);
