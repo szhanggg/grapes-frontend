@@ -59,7 +59,6 @@ export function LoginForm() {
       });
 
       let data = await r.json();
-      console.log(data);
       setName(data.name);
       setClassData(data.classData);
       setOriginalClassData(data.classData);
