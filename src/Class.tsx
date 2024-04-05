@@ -46,7 +46,7 @@ export const Class = () => {
     <div className="p-2 md:p-4">
       <NavBar link={true} />
       {curClassGrades && (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-start md:items-center gap-4">
           <CardWrapper>
             <h1 className="text-2xl font-semibold">{curClassGrades.name}</h1>
             <div className="flex justify-center w-full gap-12 items-center px-6 md:px-12 mt-4">
