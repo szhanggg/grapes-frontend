@@ -3,7 +3,9 @@ import { CardFooter } from "./ui/card";
 export const Footer = () => {
   return (
     <CardFooter>
-      <p>For questions contact me on Discord: srzhang</p>
+      <p>
+        For questions contact <b>srzhang</b> on Discord.
+      </p>
     </CardFooter>
   );
 };

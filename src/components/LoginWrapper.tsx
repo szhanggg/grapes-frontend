@@ -10,12 +10,9 @@ import Footer from "./Footer";
 
 const LoginWrapper = () => {
   return (
-    <Card>
+    <Card className="w-[28rem]">
       <CardHeader>
         <CardTitle>Login</CardTitle>
-        <CardDescription>
-          <h2>Please Report Bugs or Suggestions to srzhang on Discord</h2>
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm />
