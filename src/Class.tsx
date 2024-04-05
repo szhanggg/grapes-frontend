@@ -56,7 +56,7 @@ export const Class = () => {
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
             <CardWrapper>
-              <div className="flex justify-between w-full gap-12 items-center">
+              <div className="flex justify-between w-full gap-12 items-center px-12">
                 <div
                   className={
                     "flex flex-col items-center " +
