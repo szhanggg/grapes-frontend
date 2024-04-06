@@ -18,12 +18,12 @@ import DataContext from "@/DataContext";
 import { Checkbox } from "./ui/checkbox";
 import Cookies from "js-cookie";
 
-const backendURLs = [
-  "https://grapes-backend.up.railway.app",
-  "https://srzhang.pythonanywhere.com/",
-];
-const backendURL = backendURLs[Math.floor(Math.random() * backendURLs.length)];
-// const backendURL = "https://grapes-backend.up.railway.app";
+// const backendURLs = [
+//   "https://grapes-backend.up.railway.app",
+//   "https://srzhang.pythonanywhere.com/",
+// ];
+// const backendURL = backendURLs[Math.floor(Math.random() * backendURLs.length)];
+const backendURL = "https://grapes-backend.up.railway.app";
 // const backendURL = "https://srzhang.pythonanywhere.com/";
 // const backendURL = "http://localhost:5001";
 
