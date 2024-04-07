@@ -102,9 +102,9 @@ export const Class = () => {
           </CardWrapper>
           <CardWrapper
             className="w-full overflow-scroll"
-            cardClassName="w-full overflow-scroll"
+            cardClassName="overflow-scroll w-full md:w-auto"
           >
-            <div className="flex justify-between w-full">
+            <div className="flex justify-between w-full md:w-auto">
               <Button
                 onClick={() => {
                   setClassData(JSON.parse(JSON.stringify(originalClassData)));

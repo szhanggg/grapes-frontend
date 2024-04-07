@@ -59,39 +59,46 @@ export function LoginForm() {
 
     setIsLoading(true);
 
-    try {
-      let r = await fetch(`${backendURL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (r.status === 400) {
-        setLoginError("Wrong login details.");
-        setIsLoading(false);
-        return;
-      }
-
-      let data = await r.json();
-      setName(data.name);
-      setClassData(data.classData);
-      setOriginalClassData(data.classData);
-      setLoggedIn(true);
-      if (values.remember) {
-        Cookies.set("username", values.username);
-        Cookies.set("password", values.password);
-      }
-      navigate("/dashboard");
-    } catch (e) {
+    let r = await fetch(`${backendURL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    }).catch((e) => {
       console.error(e);
+      setLoginError(
+        "An error occurred while fetching data. If you think something is wrong please contact me."
+      );
+      setIsLoading(false);
+      return;
+    });
+
+    if (!r || (r.status !== 200 && r.status !== 400)) {
       setLoginError(
         "An error occurred while logging in. If you think something is wrong please contact me."
       );
-    } finally {
       setIsLoading(false);
+      return;
     }
+
+    if (r.status === 400) {
+      setLoginError("Wrong login details.");
+      setIsLoading(false);
+      return;
+    }
+
+    let data = await r.json();
+    setName(data.name);
+    setClassData(data.classData);
+    setOriginalClassData(data.classData);
+    setLoggedIn(true);
+    if (values.remember) {
+      Cookies.set("username", values.username);
+      Cookies.set("password", values.password);
+    }
+    navigate("/dashboard");
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -102,7 +109,6 @@ export function LoginForm() {
       form.setValue("username", username);
       form.setValue("password", password);
       form.setValue("remember", true);
-      form.handleSubmit(onSubmit)();
     }
   }, []);
 
