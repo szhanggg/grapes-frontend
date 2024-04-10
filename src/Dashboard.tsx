@@ -13,6 +13,13 @@ import { Button } from "./components/ui/button";
 import { NavBar } from "./components/NavBar";
 import { ClassCardSkeleton } from "./components/ClassCardSkeleton";
 import { AnnouncementText } from "./components/AnnouncementText";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
 
 function Dashboard() {
   const {
@@ -25,8 +32,10 @@ function Dashboard() {
     setClassData,
     setCurMP,
     curMP,
+    markingPeriods,
     setMarkingPeriods,
     resetAssignments,
+    fetchingMPData,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -97,8 +106,32 @@ function Dashboard() {
           <Button className="mb-4" onSubmit={() => resetAssignments()}>
             Reset
           </Button>
-          <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-            {loading ? (
+          {markingPeriods && (
+            <Select
+              value={curMP}
+              onValueChange={(newMP) => setCurMP(newMP)}
+              disabled={fetchingMPData || loading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Loading Data..." />
+              </SelectTrigger>
+              <SelectContent>
+                {markingPeriods
+                  .filter(
+                    (markingPeriod: any) =>
+                      markingPeriod["Name"].includes("MP3") ||
+                      markingPeriod["Name"].includes("MP4")
+                  )
+                  .map((markingPeriod: any, i: number) => (
+                    <SelectItem key={i} value={markingPeriod["Name"]}>
+                      {markingPeriod["Name"]}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          )}
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-4 mt-4">
+            {loading || fetchingMPData ? (
               <>
                 {[...Array(9)].map((_, i) => (
                   <ClassCardSkeleton key={i} />

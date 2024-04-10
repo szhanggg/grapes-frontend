@@ -44,6 +44,8 @@ interface DataContextType {
   curClassData: any;
   setCurClassData: Dispatch<SetStateAction<any>>;
   resetAssignments: () => void;
+  fetchingMPData: boolean;
+  setFetchingMPData: Dispatch<SetStateAction<boolean>>;
 }
 
 interface DataProviderProps {
@@ -77,6 +79,8 @@ const DataContext = createContext<DataContextType>({
   curClassData: {},
   setCurClassData: () => {},
   resetAssignments: () => {},
+  fetchingMPData: false,
+  setFetchingMPData: () => {},
 });
 
 export interface ClassData {
@@ -97,15 +101,15 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [classData, setClassData] = useState([] as any);
   const [originalClassData, setOriginalClassData] = useState([] as any);
   const [totalData, setTotalData] = useState<TotalData>({});
-  const [markingPeriods, setMarkingPeriods] = useState([] as string[]);
+  const [markingPeriods, setMarkingPeriods] = useState([] as any[]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [counter, setCounter] = useState(0);
   const [curMP, setCurMP] = useState<string>("");
   const [cookies, setCookies] = useState({});
   const [curClassData, setCurClassData] = useState([] as any);
+  const [fetchingMPData, setFetchingMPData] = useState(false);
 
-  const backendUrl =
-    "https://grapes-backend-rewrite-production.up.railway.app/";
+  const backendUrl = "https://grapes-backend-rewrite-production.up.railway.app";
 
   const totalGrades = useMemo(() => {
     if (!loggedIn) return [];
@@ -202,9 +206,54 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       setCurClassData(totalData[curMP]);
       setOriginalClassData(totalData[curMP]);
     } else {
-      // Fetch data
+      if (curMP === "") return;
+      if (fetchingMPData) return;
+      var newMPData = {} as any;
+      for (let mp of markingPeriods) {
+        if (mp["Name"] === curMP) {
+          newMPData = mp;
+          break;
+        }
+      }
+      fetchMarkingPeriodData(newMPData, curMP);
     }
   }, [curMP, totalData]);
+
+  const fetchMarkingPeriodData = async (mpData: any, curMP: string) => {
+    setFetchingMPData(true);
+    const r = await fetch(backendUrl + "/getmarkperiod", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cookies: cookies,
+        classList: classData,
+        markPeriodGU: mpData["markPeriodGU"],
+        gradePeriodGU: mpData["gradePeriodGU"],
+      }),
+    });
+
+    const rData = await r.json();
+
+    if ("error" in rData) {
+      throw new Error(rData["error"]);
+    }
+
+    if (!r.ok) {
+      throw new Error(rData["Error occured while logging in."]);
+    }
+
+    var totalDataCopy = JSON.parse(JSON.stringify(totalData));
+
+    totalDataCopy[curMP] = rData;
+    setTotalData(totalDataCopy);
+    setCurClassData(rData);
+
+    setFetchingMPData(false);
+
+    return rData;
+  };
 
   return (
     <DataContext.Provider
@@ -235,6 +284,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         curClassData,
         setCurClassData,
         resetAssignments,
+        fetchingMPData,
+        setFetchingMPData,
       }}
     >
       {children}
