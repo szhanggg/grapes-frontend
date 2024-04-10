@@ -74,11 +74,10 @@ function Dashboard() {
     }
 
     if (
-      curMP === "" ||
-      (!curMP &&
-        "ASP.NET_SessionId" in cookies &&
-        "PVUE" in cookies &&
-        "EES_PVUE" in cookies)
+      (curMP === "" || !curMP) &&
+      "ASP.NET_SessionId" in cookies &&
+      "PVUE" in cookies &&
+      "EES_PVUE" in cookies
     ) {
       assignmentsFetch({ mp: "" });
     }
