@@ -34,7 +34,11 @@ export const ClassCard = ({
           <h1 className={color + " font-bold text-4xl md:text-6xl"}>
             {letterGrade(grade)}
           </h1>
-          <h1 className={color + " text-2xl"}>{grade}%</h1>
+          {isNaN(grade) ? (
+            <h1 className="text-2xl text-red-500">No Assignments</h1>
+          ) : (
+            <h1 className={color + " text-2xl"}>{grade}%</h1>
+          )}
         </CardContent>
       </Card>
     </Link>
