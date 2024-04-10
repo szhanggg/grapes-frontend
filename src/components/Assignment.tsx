@@ -85,7 +85,7 @@ export const Assignment = ({
         className={`${
           isNumber(earned) && isNumber(total)
             ? colorGrade((parseFloat(earned) / parseFloat(total)) * 100)
-            : "text-red-500"
+            : "text-gray-500"
         } whitespace-nowrap`}
       >
         <Input
