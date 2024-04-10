@@ -118,8 +118,7 @@ export function LoginForm() {
       "remember" in cookies
     ) {
       if (cookies["remember"] === "true") {
-        form.setValue("remember", true);
-        onSubmit({ username: "", password: "", remember: false });
+        onSubmit({ username: "", password: "", remember: true });
       }
     }
   }, [cookies]);
