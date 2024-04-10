@@ -25,8 +25,6 @@ export const Class = () => {
     counter,
     setCounter,
     curClassData,
-    setCurClassData,
-    originalClassData,
     resetAssignments,
   } = useContext(DataContext);
 
