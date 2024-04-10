@@ -43,7 +43,9 @@ export function LoginForm() {
       body: JSON.stringify(datcopy),
     });
 
-    const rData = await res.json();
+    const rData = await res.json().catch(() => {
+      throw new Error("Error occured while logging in.");
+    })
 
     if ("cookies" in rData) {
       setCookies(rData["cookies"]);

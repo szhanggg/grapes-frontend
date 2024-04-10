@@ -41,6 +41,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const assignmentsFetch = async (data: any) => {
     if (loading) return;
@@ -55,12 +56,15 @@ function Dashboard() {
         body: JSON.stringify({ cookies: cookies }),
       });
 
-      const rData = await res.json();
+      const rData = await res.json().catch(() => {
+        throw new Error("Error occured while fetching grades in.");
+      });
+
       if ("error" in rData) {
         throw new Error(rData["error"]);
       }
       if (!res.ok) {
-        throw new Error(rData["Error occured while logging in."]);
+        throw new Error(rData["Error occured while fetching grades in."]);
       }
 
       setCurMP(rData["currentMarkPeriod"]);
@@ -89,7 +93,10 @@ function Dashboard() {
       "PVUE" in cookies &&
       "EES_PVUE" in cookies
     ) {
-      assignmentsFetch({ mp: "" });
+      assignmentsFetch({ mp: "" }).catch((e) => {
+        setError(e.message);
+        navigate("/");
+      });
     }
   }, []);
 
@@ -103,6 +110,7 @@ function Dashboard() {
         </CardHeader>
         <CardContent>
           <AnnouncementText />
+          {error && <p className="text-red-500">{error}</p>}
           <Button className="mb-4" onSubmit={() => resetAssignments()}>
             Reset
           </Button>
