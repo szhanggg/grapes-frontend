@@ -6,6 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const colorGrade = (grade: number) => {
+  if (!grade) {
+    return "text-gray-500";
+  }
   if (grade >= 89.5) {
     return "text-green-500";
   } else if (grade >= 79.5) {
@@ -20,6 +23,9 @@ export const colorGrade = (grade: number) => {
 };
 
 export const letterGrade = (grade: number) => {
+  if (!grade) {
+    return "N/A";
+  }
   if (grade >= 89.5) {
     return "A";
   } else if (grade >= 79.5) {
