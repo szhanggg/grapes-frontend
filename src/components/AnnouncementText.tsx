@@ -3,7 +3,7 @@ export function AnnouncementText() {
     <div className="mb-8">
       <p>Servers are slow sometimes; be patient please.</p>
       <p>
-        Interested in helping develop Grapes? Join the{" "}
+        Interested in helping develop Grapes? Join the Newly-Made{" "}
         <a
           href="https://discord.gg/KVyaemtJgj"
           className="text-blue-600 dark:text-blue-500 hover:underline"
