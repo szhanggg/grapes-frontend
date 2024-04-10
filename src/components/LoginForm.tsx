@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import {
@@ -18,15 +18,6 @@ import DataContext from "@/DataContext";
 import { Checkbox } from "./ui/checkbox";
 import Cookies from "js-cookie";
 
-// const backendURLs = [
-//   "https://grapes-backend.up.railway.app",
-//   "https://srzhang.pythonanywhere.com/",
-// ];
-// const backendURL = backendURLs[Math.floor(Math.random() * backendURLs.length)];
-const backendURL = "https://grapes-backend.up.railway.app";
-// const backendURL = "https://srzhang.pythonanywhere.com/";
-// const backendURL = "http://localhost:5001";
-
 const formSchema = z.object({
   username: z.string(),
   password: z.string(),
@@ -34,12 +25,65 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setName, setClassData, setLoggedIn, setOriginalClassData } =
+  const { setName, setLoggedIn, cookies, setCookies, backendUrl } =
     useContext(DataContext);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const login = async (data: z.infer<typeof formSchema>) => {
+    var datcopy = JSON.parse(JSON.stringify(data));
+    datcopy["cookies"] = cookies;
+    const res = await fetch(`${backendUrl}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datcopy),
+    });
+
+    const rData = await res.json();
+
+    if ("cookies" in rData) {
+      setCookies(rData["cookies"]);
+      for (const [key, value] of Object.entries(rData["cookies"])) {
+        Cookies.set(key, value as string);
+      }
+    }
+
+    if ("error" in rData) {
+      throw new Error(rData["error"]);
+    }
+
+    if (!res.ok) {
+      throw new Error(rData["Error occured while logging in."]);
+    }
+
+    return rData;
+  };
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    if (loading) return;
+    setLoading(true);
+    login(data)
+      .then((rData) => {
+        setName(rData["name"]);
+        setLoggedIn(true);
+        if (data.remember) {
+          Cookies.set("remember", "true");
+        } else {
+          Cookies.set("remember", "false");
+        }
+        navigate("/dashboard");
+      })
+      .catch((e) => {
+        setLoginError(e.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,67 +94,35 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Send a POST request to /login
-
-    if (isLoading) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    let r = await fetch(`${backendURL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }).catch((e) => {
-      console.error(e);
-      setLoginError(
-        "An error occurred while fetching data. If you think something is wrong please contact me."
-      );
-      setIsLoading(false);
-      return;
-    });
-
-    if (!r || (r.status !== 200 && r.status !== 400)) {
-      setLoginError(
-        "An error occurred while logging in. If you think something is wrong please contact me."
-      );
-      setIsLoading(false);
-      return;
-    }
-
-    if (r.status === 400) {
-      setLoginError("Wrong login details.");
-      setIsLoading(false);
-      return;
-    }
-
-    let data = await r.json();
-    setName(data.name);
-    setClassData(data.classData);
-    setOriginalClassData(data.classData);
-    setLoggedIn(true);
-    if (values.remember) {
-      Cookies.set("username", values.username);
-      Cookies.set("password", values.password);
-    }
-    navigate("/dashboard");
-    setIsLoading(false);
-  }
-
   useEffect(() => {
-    const username = Cookies.get("username");
-    const password = Cookies.get("password");
+    const aspnetsession = Cookies.get("ASP.NET_SessionId");
+    const pvue = Cookies.get("PVUE");
+    const ees = Cookies.get("EES_PVUE");
+    const remember = Cookies.get("remember");
 
-    if (username && password) {
-      form.setValue("username", username);
-      form.setValue("password", password);
-      form.setValue("remember", true);
+    if (aspnetsession && pvue && ees) {
+      setCookies({
+        "ASP.NET_SessionId": aspnetsession,
+        PVUE: pvue,
+        EES_PVUE: ees,
+        remember,
+      });
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      "ASP.NET_SessionId" in cookies &&
+      "PVUE" in cookies &&
+      "EES_PVUE" in cookies &&
+      "remember" in cookies
+    ) {
+      if (cookies["remember"] === "true") {
+        form.setValue("remember", true);
+        onSubmit({ username: "", password: "", remember: false });
+      }
+    }
+  }, [cookies]);
 
   return (
     <Form {...form}>
@@ -160,7 +172,7 @@ export function LoginForm() {
         />
         <Button type="submit">
           Login
-          {isLoading && (
+          {loading && (
             <Icons.spinner className="animate-spin ml-2"></Icons.spinner>
           )}
         </Button>

@@ -18,15 +18,16 @@ export const Class = () => {
   const { index } = useParams();
   const {
     totalGrades,
-    classData,
     loggedIn,
     addAssignment,
     editAssignment,
     deleteAssignment,
     counter,
     setCounter,
-    setClassData,
+    curClassData,
+    setCurClassData,
     originalClassData,
+    resetAssignments,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ export const Class = () => {
   const curClassGrades =
     index !== undefined ? totalGrades[parseInt(index)] : undefined;
 
-  const curClassData =
-    index !== undefined ? classData[parseInt(index)] : undefined;
+  const curClass =
+    index !== undefined ? curClassData[parseInt(index)] : undefined;
 
   useEffect(() => {
     if (!index) navigate("/");
@@ -105,13 +106,7 @@ export const Class = () => {
             cardClassName="overflow-scroll w-full md:w-auto"
           >
             <div className="flex justify-between w-full md:w-auto">
-              <Button
-                onClick={() => {
-                  setClassData(JSON.parse(JSON.stringify(originalClassData)));
-                }}
-              >
-                Reset
-              </Button>
+              <Button onClick={() => resetAssignments()}>Reset</Button>
               <Button
                 onClick={() => {
                   addAssignment(parseInt(index ? index : "0"), {
@@ -140,7 +135,7 @@ export const Class = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {curClassData?.assignments.map((assignment: any, i: number) => (
+                {curClass?.assignments.map((assignment: any, i: number) => (
                   <Assignment
                     key={
                       assignment.title + assignment.date + curClassGrades?.name

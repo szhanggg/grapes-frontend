@@ -5,8 +5,13 @@ import {
   useMemo,
   SetStateAction,
   Dispatch,
+  useEffect,
 } from "react";
 import { colorGrade } from "./lib/utils";
+
+interface TotalData {
+  [key: string]: any;
+}
 
 interface DataContextType {
   name: string;
@@ -27,6 +32,18 @@ interface DataContextType {
   deleteAssignment: (index: number, assignmentIndex: number) => void;
   counter: number;
   setCounter: Dispatch<SetStateAction<number>>;
+  totalData: TotalData;
+  setTotalData: Dispatch<SetStateAction<TotalData>>;
+  markingPeriods: any;
+  setMarkingPeriods: Dispatch<SetStateAction<any>>;
+  curMP: string;
+  setCurMP: Dispatch<SetStateAction<string>>;
+  backendUrl: string;
+  cookies: any;
+  setCookies: Dispatch<SetStateAction<any>>;
+  curClassData: any;
+  setCurClassData: Dispatch<SetStateAction<any>>;
+  resetAssignments: () => void;
 }
 
 interface DataProviderProps {
@@ -48,6 +65,18 @@ const DataContext = createContext<DataContextType>({
   deleteAssignment: () => {},
   counter: 1,
   setCounter: () => {},
+  totalData: {},
+  setTotalData: () => {},
+  markingPeriods: [],
+  setMarkingPeriods: () => {},
+  curMP: "",
+  setCurMP: () => {},
+  backendUrl: "",
+  cookies: {},
+  setCookies: () => {},
+  curClassData: {},
+  setCurClassData: () => {},
+  resetAssignments: () => {},
 });
 
 export interface ClassData {
@@ -60,28 +89,33 @@ export interface ClassData {
   PPEarned: number;
   grade: number;
   color: string;
+  teacher: string;
 }
 
 export const DataProvider = ({ children }: DataProviderProps) => {
   const [name, setName] = useState("Bob the Builder");
   const [classData, setClassData] = useState([] as any);
   const [originalClassData, setOriginalClassData] = useState([] as any);
+  const [totalData, setTotalData] = useState<TotalData>({});
+  const [markingPeriods, setMarkingPeriods] = useState([] as string[]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [curMP, setCurMP] = useState<string>("");
+  const [cookies, setCookies] = useState({});
+  const [curClassData, setCurClassData] = useState([] as any);
+
+  const backendUrl =
+    "https://grapes-backend-rewrite-production.up.railway.app/";
 
   const totalGrades = useMemo(() => {
     if (!loggedIn) return [];
     let fin = [] as ClassData[];
-    classData.forEach((curClass: any) => {
-      let curClassData = {} as ClassData;
-      // Delete the word containing SEC
-      let secIndex = curClass.className.indexOf("SEC");
-      if (secIndex !== -1) {
-        curClassData["name"] = curClass.className.slice(0, secIndex - 1);
-      } else {
-        curClassData["name"] = curClass.className;
-      }
-      // Loop through classData[i].assignments
+    if (!curClassData || curClassData.length === 0) return fin;
+    curClassData.forEach((curClass: any) => {
+      let newTotalGrades = {} as ClassData;
+
+      newTotalGrades["name"] = curClass["classData"]["Name"];
+
       let ATTotal = 0;
       let ATEarned = 0;
       let PPTotal = 0;
@@ -121,25 +155,26 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       PPTotal = Math.round(PPTotal * 100) / 100;
       PPEarned = Math.round(PPEarned * 100) / 100;
 
-      curClassData["ATGrade"] = ATGrade;
-      curClassData["PPGrade"] = PPGrade;
-      curClassData["grade"] = grade;
-      curClassData["ATTotal"] = ATTotal;
-      curClassData["ATEarned"] = ATEarned;
-      curClassData["PPTotal"] = PPTotal;
-      curClassData["PPEarned"] = PPEarned;
-      curClassData["color"] = colorGrade(grade);
+      newTotalGrades["ATGrade"] = ATGrade;
+      newTotalGrades["PPGrade"] = PPGrade;
+      newTotalGrades["grade"] = grade;
+      newTotalGrades["ATTotal"] = ATTotal;
+      newTotalGrades["ATEarned"] = ATEarned;
+      newTotalGrades["PPTotal"] = PPTotal;
+      newTotalGrades["PPEarned"] = PPEarned;
+      newTotalGrades["color"] = colorGrade(grade);
+      newTotalGrades["teacher"] = curClass["classData"]["teacher"];
 
-      fin.push(curClassData);
+      fin.push(newTotalGrades);
     });
     return fin;
-  }, [classData]);
+  }, [curClassData]);
 
   const addAssignment = (index: number, assignment: any) => {
-    let newClassData = JSON.parse(JSON.stringify(classData));
+    let newClassData = JSON.parse(JSON.stringify(curClassData));
     // Add to beginning of array
     newClassData[index].assignments.unshift(assignment);
-    setClassData(newClassData);
+    setCurClassData(newClassData);
   };
 
   const editAssignment = (
@@ -147,16 +182,29 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     assignmentIndex: number,
     assignment: any
   ) => {
-    let newClassData = JSON.parse(JSON.stringify(classData));
+    let newClassData = JSON.parse(JSON.stringify(curClassData));
     newClassData[index].assignments[assignmentIndex] = assignment;
-    setClassData(newClassData);
+    setCurClassData(newClassData);
   };
 
   const deleteAssignment = (index: number, assignmentIndex: number) => {
-    let newClassData = JSON.parse(JSON.stringify(classData));
+    let newClassData = JSON.parse(JSON.stringify(curClassData));
     newClassData[index].assignments.splice(assignmentIndex, 1);
-    setClassData(newClassData);
+    setCurClassData(newClassData);
   };
+
+  const resetAssignments = () => {
+    setCurClassData(JSON.parse(JSON.stringify(originalClassData)));
+  };
+
+  useEffect(() => {
+    if (curMP in totalData) {
+      setCurClassData(totalData[curMP]);
+      setOriginalClassData(totalData[curMP]);
+    } else {
+      // Fetch data
+    }
+  }, [curMP, totalData]);
 
   return (
     <DataContext.Provider
@@ -175,6 +223,18 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         deleteAssignment,
         counter,
         setCounter,
+        totalData,
+        setTotalData,
+        markingPeriods,
+        setMarkingPeriods,
+        curMP,
+        setCurMP,
+        backendUrl,
+        cookies,
+        setCookies,
+        curClassData,
+        setCurClassData,
+        resetAssignments,
       }}
     >
       {children}

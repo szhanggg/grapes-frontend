@@ -23,7 +23,7 @@ const BrowserRouter = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+  <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
     <DataProvider>
       <RouterProvider router={BrowserRouter} />
     </DataProvider>
