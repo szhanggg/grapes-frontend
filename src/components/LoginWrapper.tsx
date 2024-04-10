@@ -2,11 +2,12 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { LoginForm } from "./LoginForm";
-import Footer from "./Footer";
+import { AnnouncementText } from "./AnnouncementText";
 
 const LoginWrapper = () => {
   return (
@@ -18,7 +19,9 @@ const LoginWrapper = () => {
       <CardContent>
         <LoginForm />
       </CardContent>
-      <Footer />
+      <CardFooter>
+        <AnnouncementText />
+      </CardFooter>
     </Card>
   );
 };

@@ -12,6 +12,7 @@ import ClassCard from "./components/ClassCard";
 import { Button } from "./components/ui/button";
 import { NavBar } from "./components/NavBar";
 import { ClassCardSkeleton } from "./components/ClassCardSkeleton";
+import { AnnouncementText } from "./components/AnnouncementText";
 
 function Dashboard() {
   const {
@@ -92,6 +93,7 @@ function Dashboard() {
           <CardDescription>Grades</CardDescription>
         </CardHeader>
         <CardContent>
+          <AnnouncementText />
           <Button className="mb-4" onSubmit={() => resetAssignments()}>
             Reset
           </Button>
