@@ -111,7 +111,7 @@ function Dashboard() {
         <CardContent>
           <AnnouncementText />
           {error && <p className="text-red-500">{error}</p>}
-          <Button className="mb-4" onSubmit={() => resetAssignments()}>
+          <Button className="mb-4" onClick={() => resetAssignments()}>
             Reset
           </Button>
           {markingPeriods && (

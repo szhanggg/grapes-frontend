@@ -249,6 +249,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     totalDataCopy[curMP] = rData;
     setTotalData(totalDataCopy);
     setCurClassData(rData);
+    setOriginalClassData(rData);
 
     setFetchingMPData(false);
 
