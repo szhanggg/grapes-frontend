@@ -45,7 +45,7 @@ export function LoginForm() {
 
     const rData = await res.json().catch(() => {
       throw new Error("Error occured while logging in.");
-    })
+    });
 
     if ("cookies" in rData) {
       setCookies(rData["cookies"]);
@@ -74,8 +74,12 @@ export function LoginForm() {
         setLoggedIn(true);
         if (data.remember) {
           Cookies.set("remember", "true");
+          Cookies.set("username", data.username);
+          Cookies.set("password", data.password);
         } else {
           Cookies.set("remember", "false");
+          Cookies.remove("username");
+          Cookies.remove("password");
         }
         navigate("/dashboard");
       })
@@ -101,6 +105,8 @@ export function LoginForm() {
     const pvue = Cookies.get("PVUE");
     const ees = Cookies.get("EES_PVUE");
     const remember = Cookies.get("remember");
+    const username = Cookies.get("username");
+    const password = Cookies.get("password");
 
     if (aspnetsession && pvue && ees) {
       setCookies({
@@ -108,6 +114,8 @@ export function LoginForm() {
         PVUE: pvue,
         EES_PVUE: ees,
         remember,
+        username: username || "",
+        password: password || "",
       });
     }
   }, []);
@@ -117,10 +125,16 @@ export function LoginForm() {
       "ASP.NET_SessionId" in cookies &&
       "PVUE" in cookies &&
       "EES_PVUE" in cookies &&
-      "remember" in cookies
+      "remember" in cookies &&
+      "username" in cookies &&
+      "password" in cookies
     ) {
       if (cookies["remember"] === "true") {
-        onSubmit({ username: "", password: "", remember: true });
+        onSubmit({
+          username: cookies["username"],
+          password: cookies["password"],
+          remember: true,
+        });
       }
     }
   }, [cookies]);
