@@ -26,6 +26,17 @@ interface AssignmentProps {
 const isNumber = (value: string) => {
   return !isNaN(parseFloat(value));
 };
+const formatNumber = (value: string) => {
+  const numericv = parseFloat(value);
+  if (!isNaN(numericv)) {
+    if (numericv % 1 === 0) {  // Check if it's a whole number
+      return String(Math.trunc(numericv));  // Convert float to truncated integer
+    }
+  }
+  return value;
+};
+
+
 
 export const Assignment = ({
   assignment,
@@ -48,11 +59,12 @@ export const Assignment = ({
     });
   }, [type, earned, total]);
 
+
   useEffect(() => {
     setType(assignment.assignmentType);
-    setEarned(assignment.points);
-    setTotal(assignment.pointsPossible);
-  }, [assignment]);
+    setEarned(formatNumber(assignment.points));
+    setTotal(formatNumber(assignment.pointsPossible));
+  }, []);
 
   return (
     <TableRow>
@@ -90,14 +102,16 @@ export const Assignment = ({
       >
         <Input
           value={earned}
-          onChange={(e) => setEarned(e.target.value)}
+          onBlur={(e) => setEarned(formatNumber(e.target.value))}
+          onChange={(e) => setEarned(e.target.value.replace(/[^0-9.]/g, ""))}
           size={earned.length + 1 || 1}
           className="p-0 w-12 pl-2 inline-block"
         />
         <span className="mx-1 inline-block">/</span>
         <Input
           value={total}
-          onChange={(e) => setTotal(e.target.value)}
+          onBlur={(e) => setTotal(formatNumber(e.target.value))}
+          onChange={(e) => setTotal(e.target.value.replace(/[^0-9.]/g, ""))} // Only allow numbers and decimals
           size={total.length + 1 || 1}
           className="p-0 w-12 pl-2 inline-block"
         />

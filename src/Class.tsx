@@ -47,7 +47,8 @@ export const Class = () => {
       {curClassGrades && (
         <div className="flex flex-col items-start md:items-center gap-4">
           <CardWrapper>
-            <h1 className="text-2xl font-semibold">{curClassGrades.name}</h1>
+            <h1 className="text-2xl font-semibold text-center">{curClassGrades.name}</h1>
+            <h1 className="text-xl text-sm text-muted-foreground text-center">{curClassGrades.teacher}</h1>
             <div className="flex justify-center w-full gap-12 items-center px-6 md:px-12 mt-4">
               <div
                 className={
@@ -120,7 +121,8 @@ export const Class = () => {
                 +
               </Button>
             </div>
-            <Table className="overflow-scroll">
+            <Table className="overflow-auto no-scrollbar"> {/* used to be overflow-scroll */}
+
               <TableHeader>
                 <TableRow>
                   <TableHead className="mx-0 hidden md:table-cell"></TableHead>
