@@ -110,6 +110,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [fetchingMPData, setFetchingMPData] = useState(false);
 
   const backendUrl = "https://grapes-backend-rewrite-production.up.railway.app";
+  //const backendUrl = "http://127.0.0.1:5001";
 
   const totalGrades = useMemo(() => {
     if (!loggedIn) return [];
@@ -199,6 +200,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
 
   const resetAssignments = () => {
     setCurClassData(JSON.parse(JSON.stringify(originalClassData)));
+    document.dispatchEvent(new Event('reset'));
+    console.log("reset")
   };
 
   useEffect(() => {
