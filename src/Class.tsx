@@ -36,7 +36,7 @@ export const Class = () => {
 
   const curClass =
     index !== undefined ? curClassData[parseInt(index)] : undefined;
-  const { assignmentsLoading } = useContext(DataContext);
+
   const loading = !curClassGrades || !curClass || !curClass.assignments;
   useEffect(() => {
     if (!index) navigate("/");

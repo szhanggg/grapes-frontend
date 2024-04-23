@@ -27,7 +27,6 @@ function Dashboard() {
     loggedIn,
     totalGrades,
     socket,
-    backendUrl,
     cookies,
     setTotalData,
     setClassData,
