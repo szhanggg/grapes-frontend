@@ -26,6 +26,7 @@ function Dashboard() {
     name,
     loggedIn,
     totalGrades,
+    socket,
     backendUrl,
     cookies,
     setTotalData,
@@ -42,63 +43,62 @@ function Dashboard() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { assignmentsLoading, setAssignmentsLoading } = useContext(DataContext);
 
-  const assignmentsFetch = async (data: any) => {
+  const assignmentsFetch = (data: any) => {
     if (loading) return;
     const mp = data.mp;
     if (mp === "" || !mp) {
       setLoading(true);
-      const res = await fetch(backendUrl + "/getbasegradebook", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ cookies: cookies }),
-      });
-
-      const rData = await res.json().catch(() => {
-        throw new Error("Error occured while fetching grades in.");
-      });
-
-      if ("error" in rData) {
-        throw new Error(rData["error"]);
-      }
-      if (!res.ok) {
-        throw new Error(rData["Error occured while fetching grades in."]);
-      }
-
-      setCurMP(rData["currentMarkPeriod"]);
-      setMarkingPeriods(rData["markPeriods"]);
-      setClassData(rData["classData"]);
-
-      const totalData = {
-        [rData["currentMarkPeriod"]]: rData["currentMarkPeriodData"],
-      };
-
-      setTotalData(totalData);
-      setLoading(false);
+      socket?.emit('getbasegradebook', { cookies: cookies });
     } else {
       return;
     }
   };
+  useEffect(() => {
+    if (!socket) return;
+  
+    socket.on('basegradebook', (rData: any) => {
+      console.log("classdata recieved", rData)
+      if ("error" in rData) {
+        setError(rData["error"]);
+        navigate("/");
+      } else {
+        setCurMP(rData["currentMarkPeriod"]);
+        setMarkingPeriods(rData["markPeriods"]);
+        setClassData(rData["classData"]);
+  
+        const totalData = {
+          [rData["currentMarkPeriod"]]: rData["currentMarkPeriodData"],
+        };
+  
+        setTotalData(totalData);
+        setAssignmentsLoading(new Array(rData["classData"].length).fill(true));
+        setLoading(false);
+      }
+    });
+  
+
+  
+    return () => {
+      socket.off('basegradebook');
+    };
+  }, [socket, navigate, curMP]);
 
   useEffect(() => {
     if (!loggedIn) {
       navigate("/");
     }
-
+  
     if (
       (curMP === "" || !curMP) &&
       "ASP.NET_SessionId" in cookies &&
       "PVUE" in cookies &&
       "EES_PVUE" in cookies
     ) {
-      assignmentsFetch({ mp: "" }).catch((e) => {
-        setError(e.message);
-        navigate("/");
-      });
+      assignmentsFetch({ mp: "" });
     }
-  }, []);
+  }, [loggedIn, curMP, cookies, navigate]);
 
   return (
     <div className="p-2 md:p-4">
@@ -151,7 +151,7 @@ function Dashboard() {
                   key={i}
                   name={classData.name}
                   teacher={classData.teacher}
-                  grade={classData.grade}
+                  grade={assignmentsLoading[i] ? -60 : classData.grade}
                   color={classData.color}
                   index={i}
                 />

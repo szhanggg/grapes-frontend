@@ -8,6 +8,7 @@ import {
   useEffect,
 } from "react";
 import { colorGrade } from "./lib/utils";
+import { io, Socket } from 'socket.io-client';
 
 interface TotalData {
   [key: string]: any;
@@ -17,6 +18,7 @@ interface DataContextType {
   name: string;
   classData: any;
   loggedIn: boolean;
+  socket: Socket | null;
   setName: (name: string) => void;
   setClassData: (classData: any) => void;
   setLoggedIn: (loggedIn: boolean) => void;
@@ -46,6 +48,9 @@ interface DataContextType {
   resetAssignments: () => void;
   fetchingMPData: boolean;
   setFetchingMPData: Dispatch<SetStateAction<boolean>>;
+  assignmentsLoading: boolean[];
+  setAssignmentsLoading: Dispatch<SetStateAction<boolean[]>>;
+
 }
 
 interface DataProviderProps {
@@ -55,6 +60,7 @@ interface DataProviderProps {
 const DataContext = createContext<DataContextType>({
   name: "Bob the Builder",
   classData: {},
+  socket: null,
   loggedIn: false,
   setName: () => {},
   setClassData: () => {},
@@ -81,6 +87,9 @@ const DataContext = createContext<DataContextType>({
   resetAssignments: () => {},
   fetchingMPData: false,
   setFetchingMPData: () => {},
+  assignmentsLoading: [],
+  setAssignmentsLoading: () => {},
+
 });
 
 export interface ClassData {
@@ -108,35 +117,48 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [cookies, setCookies] = useState({});
   const [curClassData, setCurClassData] = useState([] as any);
   const [fetchingMPData, setFetchingMPData] = useState(false);
-
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [assignmentsLoading, setAssignmentsLoading] = useState<boolean[]>([]);
   const backendUrl = "https://grapes-backend-rewrite-production.up.railway.app";
   //const backendUrl = "http://127.0.0.1:5001";
 
   const totalGrades = useMemo(() => {
     if (!loggedIn) return [];
     let fin = [] as ClassData[];
-    if (!curClassData || curClassData.length === 0) return fin;
+    if (!curClassData) return fin;
     curClassData.forEach((curClass: any) => {
       let newTotalGrades = {} as ClassData;
-
+  
       newTotalGrades["name"] = curClass["classData"]["Name"];
-
+  
       let ATTotal = 0;
       let ATEarned = 0;
       let PPTotal = 0;
       let PPEarned = 0;
 
-      curClass.assignments.forEach((assignment: any) => {
-        if (assignment.points === "") return;
-        if (assignment.pointsPossible === "") return;
-        if (assignment.assignmentType === "All Tasks / Assessments") {
-          ATTotal += parseFloat(assignment.pointsPossible);
-          ATEarned += parseFloat(assignment.points);
-        } else {
-          PPTotal += parseFloat(assignment.pointsPossible);
-          PPEarned += parseFloat(assignment.points);
-        }
-      });
+      if (!curClass.assignments) {
+        ATTotal += parseFloat("-20.0");
+        ATEarned += parseFloat("12.0");
+      } else if (curClass.assignments.length > 0) {
+        curClass.assignments.forEach((assignment: any) => {
+          if (assignment.points === "") return;
+          if (assignment.pointsPossible === "") return;
+          if (assignment.assignmentType === "All Tasks / Assessments") {
+            ATTotal += parseFloat(assignment.pointsPossible);
+            ATEarned += parseFloat(assignment.points);
+          } else {
+            PPTotal += parseFloat(assignment.pointsPossible);
+            PPEarned += parseFloat(assignment.points);
+          }
+
+      });}
+
+
+
+
+
+
+
 
       let ATGrade = ATEarned / ATTotal;
       let PPGrade = PPEarned / PPTotal;
@@ -173,11 +195,11 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       fin.push(newTotalGrades);
     });
     return fin;
-  }, [curClassData]);
+  }, [loggedIn, curClassData]);
 
   const addAssignment = (index: number, assignment: any) => {
     let newClassData = JSON.parse(JSON.stringify(curClassData));
-    // Add to beginning of array
+  
     newClassData[index].assignments.unshift(assignment);
     setCurClassData(newClassData);
   };
@@ -203,6 +225,34 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     document.dispatchEvent(new Event('reset'));
     console.log("reset")
   };
+  
+  useEffect(() => {
+    if (!socket) return;
+  
+    socket.on('assignments', (rData: any) => {
+      setTotalData((prevData) => ({
+        ...prevData,
+        [curMP]: prevData[curMP].map((classData: any, index: number) => {
+          if (index === rData.classIndex) {
+            setAssignmentsLoading((prevLoading) => {
+              const updatedLoading = [...prevLoading];
+              updatedLoading[rData.classIndex] = false;
+              return updatedLoading;
+            });
+            return {
+              ...classData,
+              assignments: rData.assignments,
+            };
+          }
+          return classData;
+        }),
+      }));
+    });
+  
+    return () => {
+      socket.off('assignments');
+    };
+  }, [socket, curMP]);
 
   useEffect(() => {
     if (curMP in totalData) {
@@ -218,46 +268,49 @@ export const DataProvider = ({ children }: DataProviderProps) => {
           break;
         }
       }
-      fetchMarkingPeriodData(newMPData, curMP);
+      fetchMarkingPeriodData(newMPData);
     }
   }, [curMP, totalData]);
 
-  const fetchMarkingPeriodData = async (mpData: any, curMP: string) => {
+  useEffect(() => {
+    const newSocket = io(backendUrl);
+    setSocket(newSocket);
+  
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [backendUrl]);
+
+  const fetchMarkingPeriodData = async (mpData: any) => {
     setFetchingMPData(true);
-    const r = await fetch(backendUrl + "/getmarkperiod", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cookies: cookies,
-        classList: classData,
-        markPeriodGU: mpData["markPeriodGU"],
-        gradePeriodGU: mpData["gradePeriodGU"],
-      }),
+    socket?.emit('getmarkperiod', {
+      cookies: cookies,
+      classList: classData,
+      markPeriodGU: mpData["markPeriodGU"],
+      gradePeriodGU: mpData["gradePeriodGU"],
     });
-
-    const rData = await r.json();
-
-    if ("error" in rData) {
-      throw new Error(rData["error"]);
-    }
-
-    if (!r.ok) {
-      throw new Error(rData["Error occured while logging in."]);
-    }
-
-    var totalDataCopy = JSON.parse(JSON.stringify(totalData));
-
-    totalDataCopy[curMP] = rData;
-    setTotalData(totalDataCopy);
-    setCurClassData(rData);
-    setOriginalClassData(rData);
-
-    setFetchingMPData(false);
-
-    return rData;
   };
+
+  useEffect(() => {
+    if (!socket) return;
+  
+    socket.on('markperiod', (rData: any) => {
+      if ("error" in rData) {
+        console.error(rData["error"]);
+      } else {
+        var totalDataCopy = JSON.parse(JSON.stringify(totalData));
+        totalDataCopy[curMP] = rData;
+        setTotalData(totalDataCopy);
+        setCurClassData(rData);
+        setOriginalClassData(rData);
+        setFetchingMPData(false);
+      }
+    });
+  
+    return () => {
+      socket.off('markperiod');
+    };
+  }, [socket, totalData, curMP]);
 
   return (
     <DataContext.Provider
@@ -268,6 +321,9 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         setName,
         setClassData,
         setLoggedIn,
+        assignmentsLoading,
+        setAssignmentsLoading,
+        socket,
         totalGrades,
         originalClassData,
         setOriginalClassData,
@@ -290,6 +346,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         resetAssignments,
         fetchingMPData,
         setFetchingMPData,
+        
       }}
     >
       {children}

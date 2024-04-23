@@ -25,70 +25,19 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { setName, setLoggedIn, cookies, setCookies, backendUrl } =
+  const { setName, setLoggedIn, cookies, setCookies, socket } =
     useContext(DataContext);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
-  const login = async (data: z.infer<typeof formSchema>) => {
-    var datcopy = JSON.parse(JSON.stringify(data));
-    datcopy["cookies"] = cookies;
-    const res = await fetch(`${backendUrl}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(datcopy),
-    });
-
-    const rData = await res.json().catch(() => {
-      throw new Error("Error occured while logging in.");
-    });
-
-    if ("cookies" in rData) {
-      setCookies(rData["cookies"]);
-      for (const [key, value] of Object.entries(rData["cookies"])) {
-        Cookies.set(key, value as string);
-      }
-    }
-
-    if ("error" in rData) {
-      throw new Error(rData["error"]);
-    }
-
-    if (!res.ok) {
-      throw new Error(rData["Error occured while logging in."]);
-    }
-
-    return rData;
-  };
-
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (loading) return;
     setLoading(true);
-    login(data)
-      .then((rData) => {
-        setName(rData["name"]);
-        setLoggedIn(true);
-        if (data.remember) {
-          Cookies.set("remember", "true");
-          Cookies.set("username", data.username);
-          Cookies.set("password", data.password);
-        } else {
-          Cookies.set("remember", "false");
-          Cookies.remove("username");
-          Cookies.remove("password");
-        }
-        navigate("/dashboard");
-      })
-      .catch((e) => {
-        setLoginError(e.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    var datcopy = JSON.parse(JSON.stringify(data));
+    datcopy["cookies"] = cookies;
+    socket?.emit('login', datcopy);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -138,6 +87,38 @@ export function LoginForm() {
       }
     }
   }, [cookies]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('login', (data: any) => {
+      if ('error' in data) {
+        setLoginError(data.error);
+        setLoading(false);
+      } else {
+        setName(data.name);
+        setCookies(data.cookies);
+        for (const [key, value] of Object.entries(data.cookies)) {
+          Cookies.set(key, value as string);
+        }
+        setLoggedIn(true);
+        if (form.getValues('remember')) {
+          Cookies.set("remember", "true");
+          Cookies.set("username", form.getValues('username'));
+          Cookies.set("password", form.getValues('password'));
+        } else {
+          Cookies.set("remember", "false");
+          Cookies.remove("username");
+          Cookies.remove("password");
+        }
+        navigate("/dashboard");
+      }
+    });
+
+    return () => {
+      socket.off('login');
+    };
+  }, [socket]);
 
   return (
     <Form {...form}>
