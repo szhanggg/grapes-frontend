@@ -66,6 +66,16 @@ export const Assignment = ({
     setTotal(formatNumber(assignment.pointsPossible));
   }, []);
 
+  useEffect(() => {
+    const handleReset = () => {
+      setEarned(formatNumber(assignment.points));
+      setTotal(formatNumber(assignment.pointsPossible));
+    };
+  
+    document.addEventListener('reset', handleReset);
+    return () => document.removeEventListener('reset', handleReset);
+  }, []);
+
   return (
     <TableRow>
       <TableCell className="hidden md:table-cell">
