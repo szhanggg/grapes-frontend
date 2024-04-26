@@ -42,7 +42,7 @@ export const Class = () => {
   }, []);
 
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-2 md:p-4 no-scrollbar">
       <NavBar link={true} />
       {curClassGrades && (
         <div className="flex flex-col items-start md:items-center gap-4">
