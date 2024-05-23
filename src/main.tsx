@@ -6,6 +6,9 @@ import "./globals.css";
 import Dashboard from "./Dashboard.tsx";
 import Class from "./Class.tsx";
 import { ThemeProvider } from "./components/ThemeProvider.tsx";
+import { registerSW } from "virtual:pwa-register";
+
+registerSW({ immediate: true });
 
 const BrowserRouter = createBrowserRouter([
   {

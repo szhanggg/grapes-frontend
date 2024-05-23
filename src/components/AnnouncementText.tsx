@@ -13,7 +13,10 @@ export function AnnouncementText() {
         .
       </p>
       <p>
-        Contact: srzhang (discord), @srzhxng (ig).
+        srzhang (discord)
+      </p>
+      <p>
+        @srzhxng (ig)
       </p>
       <p>
         Please report any bugs, issues, or suggestions.
