@@ -112,7 +112,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [fetchingMPData, setFetchingMPData] = useState(false);
 
   const backendUrl = "https://grapes-backend-rewrite-production.up.railway.app";
-  const version = "2.0";
+  const version = "1.0";
   //const backendUrl = "http://127.0.0.1:5001";
 
   const totalGrades = useMemo(() => {
