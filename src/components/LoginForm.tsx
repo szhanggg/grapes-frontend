@@ -25,7 +25,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { setName, setLoggedIn, cookies, setCookies, backendUrl } =
+  const { setName, setLoggedIn, cookies, setCookies, backendUrl, version } =
     useContext(DataContext);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export function LoginForm() {
         "EES_PVUE": "",
       };
     }
-    const res = await fetch(`${backendUrl}/login`, {
+    const res = await fetch(`${backendUrl}/login?v=${version}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

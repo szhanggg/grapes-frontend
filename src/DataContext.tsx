@@ -46,6 +46,7 @@ interface DataContextType {
   resetAssignments: () => void;
   fetchingMPData: boolean;
   setFetchingMPData: Dispatch<SetStateAction<boolean>>;
+  version: string;
 }
 
 interface DataProviderProps {
@@ -81,6 +82,7 @@ const DataContext = createContext<DataContextType>({
   resetAssignments: () => {},
   fetchingMPData: false,
   setFetchingMPData: () => {},
+  version: "1.0",
 });
 
 export interface ClassData {
@@ -110,6 +112,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   const [fetchingMPData, setFetchingMPData] = useState(false);
 
   const backendUrl = "https://grapes-backend-rewrite-production.up.railway.app";
+  const version = "1.0";
   //const backendUrl = "http://127.0.0.1:5001";
 
   const totalGrades = useMemo(() => {
@@ -283,6 +286,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         curMP,
         setCurMP,
         backendUrl,
+        version,
         cookies,
         setCookies,
         curClassData,
