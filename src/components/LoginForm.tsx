@@ -35,6 +35,14 @@ export function LoginForm() {
   const login = async (data: z.infer<typeof formSchema>) => {
     var datcopy = JSON.parse(JSON.stringify(data));
     datcopy["cookies"] = cookies;
+    if(datcopy.remember === false) {
+      // Delete the session cookies
+      datcopy["cookies"] = {
+        "ASP.NET_SessionId": "",
+        "PVUE": "",
+        "EES_PVUE": "",
+      };
+    }
     const res = await fetch(`${backendUrl}/login`, {
       method: "POST",
       headers: {
