@@ -36,6 +36,7 @@ function Dashboard() {
     setMarkingPeriods,
     resetAssignments,
     fetchingMPData,
+    version
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ function Dashboard() {
     const mp = data.mp;
     if (mp === "" || !mp) {
       setLoading(true);
-      const res = await fetch(backendUrl + "/getbasegradebook", {
+      const res = await fetch(backendUrl + "/getbasegradebook?v=" + version, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
