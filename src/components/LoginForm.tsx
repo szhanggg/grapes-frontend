@@ -92,6 +92,7 @@ export function LoginForm() {
         navigate("/dashboard");
       })
       .catch((e) => {
+        console.log(e);
         setLoginError(e.message);
       })
       .finally(() => {

@@ -8,18 +8,15 @@ export function AnnouncementText() {
           href="https://discord.gg/KVyaemtJgj"
           className="text-blue-600 dark:text-blue-500 hover:underline"
         >
-          Discord
+          Discord. Contact: srzhang (discord) @srzhxng (ig)
         </a>
         .
       </p>
       <p>
-        srzhang (discord)
-      </p>
-      <p>
-        @srzhxng (ig)
-      </p>
-      <p>
         Please report any bugs, issues, or suggestions.
+      </p>
+      <p>
+        Contributors: Erol
       </p>
     </div>
   );
