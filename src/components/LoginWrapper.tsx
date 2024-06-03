@@ -21,6 +21,7 @@ const LoginWrapper = () => {
       </CardContent>
       <CardFooter>
         <AnnouncementText />
+        <div className="mb-8" />
       </CardFooter>
     </Card>
   );

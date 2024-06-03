@@ -36,7 +36,7 @@ function Dashboard() {
     setMarkingPeriods,
     resetAssignments,
     fetchingMPData,
-    version
+    version,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -110,7 +110,6 @@ function Dashboard() {
           <CardDescription>Grades</CardDescription>
         </CardHeader>
         <CardContent>
-          <AnnouncementText />
           {error && <p className="text-red-500">{error}</p>}
           <Button className="mb-4" onClick={() => resetAssignments()}>
             Reset
@@ -159,6 +158,8 @@ function Dashboard() {
               ))
             )}
           </div>
+          <div className="mb-8" />
+          <AnnouncementText />
         </CardContent>
       </Card>
     </div>
