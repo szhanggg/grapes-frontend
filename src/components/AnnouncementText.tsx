@@ -1,7 +1,6 @@
 export function AnnouncementText() {
   return (
     <div>
-      <p>Servers are slow sometimes; be patient please.</p>
       <p>
         Join the {" "}
         <a
@@ -15,6 +14,10 @@ export function AnnouncementText() {
       </p>
       <p>
         Contributors: Erol
+      </p>
+      <p>
+        To install the app on iPhone: Press share then Add to Home Screen.
+        The app should work on MCPS Wifi.
       </p>
     </div>
   );
