@@ -127,8 +127,8 @@ function Dashboard() {
                 {markingPeriods
                   .filter(
                     (markingPeriod: any) =>
-                      markingPeriod["Name"].includes("MP3") ||
-                      markingPeriod["Name"].includes("MP4")
+                      markingPeriod["Name"].includes("MP1") ||
+                      markingPeriod["Name"].includes("MP2")
                   )
                   .map((markingPeriod: any, i: number) => (
                     <SelectItem key={i} value={markingPeriod["Name"]}>
