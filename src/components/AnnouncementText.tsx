@@ -10,7 +10,7 @@ export function AnnouncementText() {
           Discord.</a>
       </p>
       <p>
-        @srzhangg (ig)
+        @srzhangg
       </p>
     </div>
   );
