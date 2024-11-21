@@ -2,15 +2,10 @@ export function AnnouncementText() {
   return (
     <div>
       <p>
-        Join the {" "}
-        <a
-          href="https://discord.gg/KVyaemtJgj"
-          className="text-blue-600 dark:text-blue-500 hover:underline"
-        >
-          Discord.</a>
+        No longer works anymore. Sorry all!
       </p>
       <p>
-        @srzhangg
+        @srzhangg (ig), @srzhang (discord)
       </p>
     </div>
   );
